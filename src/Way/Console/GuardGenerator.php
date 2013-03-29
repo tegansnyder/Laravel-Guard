@@ -164,7 +164,7 @@ class GuardGenerator {
 		$path = $language === 'css' ? $this->cssPath : $this->jsPath;
 
 		// We'll either grab from the guard config file, or all files from the js dir
-		$files = $this->config->get("guard.{$language}_concat", $this->file->files($path));
+		$files = $this->config->get("packages/way/guard-laravel/$guard.{$language}_concat", $this->file->files($path));
 
 		// The concat plugin expects file names without extensions.
 		// Also, never concatenate the combined file. TODO - shouldn't min names.
