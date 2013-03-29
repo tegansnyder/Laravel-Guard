@@ -29,7 +29,7 @@ class GuardInitCommand extends Command {
 	 *
 	 * @var array
 	 */
-	protected $plugins = array('concat-js', 'uglify');
+	protected $plugins = array('concat-js', 'uglify', 'phpunit');
 
 	/**
 	 * File generator instance
@@ -126,6 +126,7 @@ class GuardInitCommand extends Command {
 
 		$this->getGem("guard-concat");
 		$this->getGem("guard-uglify");
+		$this->getGem("guard-phpunit");
 
 		$this->generate->guardFile($this->plugins, base_path());
 		$this->info('Created Guardfile');
