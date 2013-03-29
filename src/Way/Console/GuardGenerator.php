@@ -64,7 +64,7 @@ class GuardGenerator {
 		// for me, so I'm specifing the full path. It's my fault. Need to check with Taylor. FIXME.
 		$this->jsPath = $this->config->get('packages/way/guard-laravel/guard.js_path', 'public/js');
 		$this->cssPath = $this->config->get('packages/way/guard-laravel/guard.css_path', 'public/css');
-		$this->assetsPath = $this->config->get('packages/way/guard-laravel/guard.css_path', 'app/assets');
+		$this->assetsPath = $this->config->get('packages/way/guard-laravel/guard.assets_path', 'app/assets');
 	}
 
 	/**
