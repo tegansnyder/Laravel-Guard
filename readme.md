@@ -90,10 +90,9 @@ When you run `php artisan guard:watch`, in addition to compiling assets, it will
 
 Guard will run PHPUnit:
 
-- When any test within `app/tests` is saved
-- When a view file is saved, all tests will run. You may want to update this to only run integration tests
-- When any class file is saved, it will attempt to find an associated test and call it. For example, save `app/models/User.php`, and it will test `app/tests/models/UserTest.php`.
--
+1. When any test within `app/tests` is saved
+2. When a view file is saved, all tests will run. You may want to update this to only run integration tests
+3. When any class file is saved, it will attempt to find an associated test and call it. For example, save `app/models/User.php`, and it will test `app/tests/models/UserTest.php`.
 
 ## Workflow
 
