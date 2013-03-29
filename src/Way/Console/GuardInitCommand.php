@@ -89,7 +89,7 @@ class GuardInitCommand extends Command {
 			exit();
 		}
 
-		$this->getGem('guard');
+		$this->getDefaultGems();
 
 		// Do they want preprocessing?
 		if ($preprocessor = $this->wantsPreprocessing())
@@ -124,10 +124,6 @@ class GuardInitCommand extends Command {
 			$this->info("Created {$this->assetsPath}/coffee");
 		}
 
-		$this->getGem("guard-concat");
-		$this->getGem("guard-uglify");
-		$this->getGem("guard-phpunit");
-
 		$this->generate->guardFile($this->plugins, base_path());
 		$this->info('Created Guardfile');
 
@@ -139,6 +135,14 @@ class GuardInitCommand extends Command {
 		$ruby = shell_exec('ruby -v');
 
 		return starts_with($ruby, 'ruby');
+	}
+
+	protected function getDefaultGems()
+	{
+		foreach(array('guard', 'guard-uglify', 'guard-phpunit', 'guard-concat') as $gem)
+		{
+			$this->getGem($gem);
+		}
 	}
 
 	protected function getGem($gemName)
