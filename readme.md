@@ -88,11 +88,11 @@ When you run `php artisan guard:watch`, in addition to compiling assets, it will
 
 > **Mac Users**: Want native notifications? `gem install terminal-guard-notifier`, and you're all set to go!
 
-Guard will run PHPUnit...
+Guard will run PHPUnit:
 
-- When any test within `app/tests` is saved, it will auto-run
-- When a view file is saved, all tests will run (you may want to update this to only run integration tests)
-- When a class is saved, it will attempt to find an associated test and call it. For example, save `app/models/User.php`, and it will test `app/tests/models/UserTest.php`.
+- When any test within `app/tests` is saved
+- When a view file is saved, all tests will run. You may want to update this to only run integration tests
+- When any class file is saved, it will attempt to find an associated test and call it. For example, save `app/models/User.php`, and it will test `app/tests/models/UserTest.php`.
 -
 
 ## Workflow
