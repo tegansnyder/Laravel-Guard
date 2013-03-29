@@ -60,10 +60,11 @@ class GuardGenerator {
 	 */
 	protected function setPaths()
 	{
-		$this->cssPath = $this->config->get('guard.css_path', 'public/css');
-		$this->jsPath = $this->config->get('guard.js_path', 'public/js');
-		$this->assetsPath = $this->config->get('guard.assets_path', 'app/assets');
-
+		// This is bad and temporary. Fetching a package config file isn't working
+		// for me, so I'm specifing the full path. It's my fault. Need to check with Taylor. FIXME.
+		$this->jsPath = $this->config->get('packages/way/guard-laravel/guard.js_path', 'public/js');
+		$this->cssPath = $this->config->get('packages/way/guard-laravel/guard.css_path', 'public/css');
+		$this->assetsPath = $this->config->get('packages/way/guard-laravel/guard.css_path', 'app/assets');
 	}
 
 	/**
