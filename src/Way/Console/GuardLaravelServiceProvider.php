@@ -25,6 +25,11 @@ class GuardLaravelServiceProvider extends ServiceProvider {
 		$this->registerCommands();
 	}
 
+	/**
+	 * Register guard.make
+	 *
+	 * @return Way\Console\GuardInitCommand
+	 */
 	protected function registerMake()
 	{
 		// guard:make
@@ -37,6 +42,11 @@ class GuardLaravelServiceProvider extends ServiceProvider {
 		});
 	}
 
+	/**
+	 * Register guard.watch
+	 *
+	 * @return Way\Console\GuardWatchCommand
+	 */
 	protected function registerWatch()
 	{
 		// guard:watch
@@ -46,6 +56,11 @@ class GuardLaravelServiceProvider extends ServiceProvider {
 		});
 	}
 
+	/**
+	 * Register guard.refresh
+	 *
+	 * @return Way\Console\GuardRefreshCommand
+	 */
 	protected function registerRefresh()
 	{
 		// guard:refresh
@@ -57,6 +72,11 @@ class GuardLaravelServiceProvider extends ServiceProvider {
 		});
 	}
 
+	/**
+	 * Make commands visible to Artisan
+	 *
+	 * @return void
+	 */
 	protected function registerCommands()
 	{
 		$this->commands(

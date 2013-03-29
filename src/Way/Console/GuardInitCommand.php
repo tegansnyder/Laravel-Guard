@@ -130,6 +130,11 @@ class GuardInitCommand extends Command {
 		$this->savePluginListToCache();
 	}
 
+	/**
+	 * Does user have Ruby installed?
+	 *
+	 * @return boolean
+	 */
 	protected function hasRuby()
 	{
 		$ruby = shell_exec('ruby -v');
@@ -137,6 +142,11 @@ class GuardInitCommand extends Command {
 		return starts_with($ruby, 'ruby');
 	}
 
+	/**
+	 * Install default gems
+	 *
+	 * @return void
+	 */
 	protected function getDefaultGems()
 	{
 		foreach(array('guard', 'guard-uglify', 'guard-phpunit', 'guard-concat') as $gem)
@@ -145,6 +155,12 @@ class GuardInitCommand extends Command {
 		}
 	}
 
+	/**
+	 * Install gem
+	 *
+	 * @param  string $gemName
+	 * @return void
+	 */
 	protected function getGem($gemName)
 	{
 		if (! $this->gem->exists($gemName))
@@ -155,6 +171,11 @@ class GuardInitCommand extends Command {
 		}
 	}
 
+	/**
+	 * Ask if user wants a CSS preprocessor
+	 *
+	 * @return string|boolean
+	 */
 	protected function wantsPreprocessing()
 	{
 		if ($this->confirm('Do you require CSS preprocessing? [yes|no]', false))
@@ -173,11 +194,21 @@ class GuardInitCommand extends Command {
 		return false;
 	}
 
+	/**
+	 * Ask if the user wants CoffeeScript
+	 *
+	 * @return boolean
+	 */
 	protected function wantsCoffee()
 	{
 		return $this->confirm('What about CoffeeScript support? [yes|no]', false);
 	}
 
+	/**
+	 * Keep a log of user's requested gems
+	 *
+	 * @return void
+	 */
 	protected function savePluginListToCache()
 	{
 		$cache = app_path().'/storage/guard';

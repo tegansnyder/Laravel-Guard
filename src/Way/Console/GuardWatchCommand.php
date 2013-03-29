@@ -27,7 +27,7 @@ class GuardWatchCommand extends Command {
 	 */
 	public function fire()
 	{
-		shell_exec('guard'); // ...I know. Convenience, yo!
+		shell_exec('guard'); // ...I know. Convenience, fool!
 	}
 
 }

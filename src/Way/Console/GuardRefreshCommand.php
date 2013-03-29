@@ -49,6 +49,11 @@ class GuardRefreshCommand extends Command {
 		$this->generate->guardFile(explode(' ', $this->getPluginListFromStorage()), base_path());
 	}
 
+	/**
+	 * Fetches latest list of user requested Guard plugins
+	 *
+	 * @return string|Exception
+	 */
 	protected function getPluginListFromStorage()
 	{
 		return \File::get(app_path() .'/storage/guard/plugins.txt');

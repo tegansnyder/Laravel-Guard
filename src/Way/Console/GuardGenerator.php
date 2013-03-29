@@ -53,6 +53,11 @@ class GuardGenerator {
 		$this->setPaths();
 	}
 
+	/**
+	 * Set common folder paths
+	 *
+	 * @return void
+	 */
 	protected function setPaths()
 	{
 		$this->cssPath = $this->config->get('guard.css_path', 'public/css');
@@ -61,6 +66,12 @@ class GuardGenerator {
 
 	}
 
+	/**
+	 * Generate an asset folder
+	 *
+	 * @param  string $dir
+	 * @return void
+	 */
 	public function assetFolder($dir)
 	{
 		$dir = "{$this->assetsPath}/{$dir}";
@@ -71,6 +82,13 @@ class GuardGenerator {
 		}
 	}
 
+	/**
+	 * Generate the Guardfile and boilerplate
+	 *
+	 * @param  array  $plugins List of desired plugins
+	 * @param  string $path Directory where file will be created
+	 * @return void
+	 */
 	public function guardFile(array $plugins, $path)
 	{
 		$stubs = $this->getStubs($plugins);
@@ -78,12 +96,25 @@ class GuardGenerator {
 		return $this->file->put($path.'/Guardfile', $stubs);
 	}
 
+	/**
+	 * Get stubs for requested plugins
+	 *
+	 * @param  array  $plugins
+	 * @return string
+	 */
 	protected function getStubs(array $plugins)
 	{
 		$stubs = array();
 
 		foreach($plugins as $plugin)
 		{
+			// The concat plugin needs special treatment.
+			if (starts_with($plugin, 'concat'))
+			{
+				$stubs[] = $this->getConcatStub(substr($plugin, 7));
+				continue;
+			}
+
 			$stubs[] = $this->getStub($plugin);
 		}
 
@@ -91,14 +122,14 @@ class GuardGenerator {
 		return implode("\n\n", $stubs);
 	}
 
+	/**
+	 * Get a single stub and replace paths
+	 *
+	 * @param  string $plugin Name of plugin to get stub for
+	 * @return string
+	 */
 	protected function getStub($plugin)
 	{
-		// The concat plugin needs special treatment.
-		if ($plugin === 'concat-js' or $plugin === 'concat-css')
-		{
-			return $this->getConcatStub(substr($plugin, 7));
-		}
-
 		$stubPath = __DIR__ . "/stubs/guard-{$plugin}-stub.txt";
 		if (file_exists($stubPath))
 		{
@@ -107,6 +138,12 @@ class GuardGenerator {
 		}
 	}
 
+	/**
+	 * Replace template tags in stub
+	 *
+	 * @param  string $stub
+	 * @return string
+	 */
 	protected function applyPathsToStub($stub)
 	{
 		return preg_replace_callback('/{{([a-z]+Path)}}/i', function($property) {
@@ -114,26 +151,30 @@ class GuardGenerator {
 		}, $stub);
 	}
 
+	/**
+	 * Gets the stub for guard-concat
+	 *
+	 * @param  string $language [css|js]
+	 * @return [type]           [description]
+	 */
 	protected function getConcatStub($language)
 	{
+		// We need to know which config option to grab
 		$path = $language === 'css' ? $this->cssPath : $this->jsPath;
 
 		// We'll either grab from the guard config file, or all files from the js dir
 		$files = $this->config->get("guard.{$language}_concat", $this->file->files($path));
 
 		// The concat plugin expects file names without extensions.
-		// Also, never concatenate the combined file. TODO - shouldn't hardcode name.
+		// Also, never concatenate the combined file. TODO - shouldn't min names.
 		$files = array_map(function($file)
 		{
 			return pathinfo($file, PATHINFO_FILENAME);
 		}, array_diff($files, array('scripts.min', 'style.min')));
 
 		// Now, we'll grab the concat stub, and replace it with the
-		// Ruby-specific array of JS files.
-		$stub = $this->file->get(__DIR__ . "/stubs/guard-concat-{$language}-stub.txt");
-		$stub = $this->applyPathsToStub($stub);
-
-		return str_replace('{{files}}', implode(' ', $files), $stub);
+		// Ruby-formatted array of JS files.
+		return str_replace('{{files}}', implode(' ', $files), $this->getStub("concat-{$language}"));
 	}
 
 }
