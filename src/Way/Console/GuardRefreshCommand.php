@@ -46,7 +46,7 @@ class GuardRefreshCommand extends Command {
 	 */
 	public function fire()
 	{
-		$this->generate->guardFile(explode(' ', $this->getPluginListFromStorage()));
+		$this->generate->guardFile(explode(' ', $this->getPluginListFromStorage()), base_path());
 	}
 
 	protected function getPluginListFromStorage()
