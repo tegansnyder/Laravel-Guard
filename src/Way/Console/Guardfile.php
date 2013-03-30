@@ -145,9 +145,19 @@ class Guardfile {
 	 */
 	public function updateSignature($plugin)
 	{
-		$language = substr($plugin, 7);
-		$stub = $this->applyPathsToStub($this->getConcatStub($plugin));
-		$stub = preg_replace('/guard :concat, type: "' . $language . '".+/i', $stub, $this->getContents());
+		// Concat plugins need some special traetment.
+		if (starts_with($plugin, 'concat'))
+		{
+			$language = substr($plugin, 7);
+			$stub = $this->applyPathsToStub($this->getConcatStub($plugin));
+			$stub = preg_replace('/guard :concat, type: "' . $language . '".+/i', $stub, $this->getContents());
+		}
+		else
+		{
+			$stub = $this->applyPathsToStub($this->getPluginStub($plugin));
+			$stub = preg_replace("/guard '" . $plugin . "'.+?(?=\\n\\n|$)/us", $stub, $this->getContents());
+		}
+
 		$this->put($stub);
 	}
 

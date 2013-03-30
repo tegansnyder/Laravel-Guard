@@ -11,7 +11,7 @@ return array(
 	| directory. We've set a sensible default, but feel free to update it.
 	|
 	*/
-	'js_path' => 'public/js',
+	'js_path' => 'public/j',
 
 	/*
 	|--------------------------------------------------------------------------
@@ -22,7 +22,7 @@ return array(
 	| directory. We've set a sensible default, but feel free to update it.
 	|
 	*/
-	'css_path' => 'public/css',
+	'css_path' => 'public/c',
 
 	/*
 	|--------------------------------------------------------------------------
@@ -34,7 +34,7 @@ return array(
 	| will be inserted.
 	|
 	*/
-	'assets_path' => 'app/assets',
+	'assets_path' => 'app/a',
 
 	/*
 	|--------------------------------------------------------------------------

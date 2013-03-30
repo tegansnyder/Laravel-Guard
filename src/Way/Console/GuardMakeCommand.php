@@ -103,7 +103,7 @@ class GuardMakeCommand extends Command {
 			$this->setupPreprocessor('coffeescript', 'coffee');
 		}
 
-		$this->generate->guardFile($this->plugins, base_path());
+		$this->generate->guardFile($this->plugins);
 		$this->info('Created Guardfile');
 	}
 

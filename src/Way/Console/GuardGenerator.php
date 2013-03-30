@@ -47,17 +47,15 @@ class GuardGenerator {
      * Generate the Guardfile and boilerplate
      *
      * @param  array  $plugins List of desired plugins
-     * @param  string $path Directory where file will be created
      * @return void
      */
-    public function guardFile(array $plugins, $path)
+    public function guardFile(array $plugins)
     {
         // Sort Guardfile plugins alphabetically
         sort($plugins);
 
         $stubs = $this->guardFile->getStubs($plugins);
-
-        return $this->file->put($path.'/Guardfile', $stubs);
+        $this->guardFile->put($stubs);
     }
 
 }

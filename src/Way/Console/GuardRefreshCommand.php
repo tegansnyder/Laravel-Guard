@@ -48,6 +48,9 @@ class GuardRefreshCommand extends Command {
 	{
 		$this->guardFile->updateSignature('concat-js');
 		$this->guardFile->updateSignature('concat-css');
+		$this->guardFile->updateSignature('coffeescript');
+		$this->guardFile->updateSignature('sass');
+		$this->guardFile->updateSignature('uglify');
 	}
 
 }
