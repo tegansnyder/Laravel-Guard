@@ -1,3 +1,3 @@
-guard 'less', :all_on_start => true, :all_on_start => false, :output => '{{cssPath}}' do
+guard :less, :all_on_start => true, :all_on_start => false, :output => '{{cssPath}}' do
 	watch(%r[^{{assetsPath}}/less/(.+\.less)$])
 end

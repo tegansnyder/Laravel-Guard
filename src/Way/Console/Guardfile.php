@@ -139,6 +139,8 @@ class Guardfile {
 
 	/**
 	 * Update concat plugin signature and saves file
+	 * TODO: this isn't sustainable. Need a better
+	 * way to recompile.
 	 *
 	 * @param  string $plugin
 	 * @return void
@@ -155,7 +157,8 @@ class Guardfile {
 		else
 		{
 			$stub = $this->applyPathsToStub($this->getPluginStub($plugin));
-			$stub = preg_replace("/guard '" . $plugin . "'.+?(?=\\n\\n|$)/us", $stub, $this->getContents());
+			$module = $plugin === 'refresher' ? '(module.+?)?' : '';
+			$stub = preg_replace("/{$module}guard :" . $plugin . ".+?(?=\\n\\n|$)/us", $stub, $this->getContents());
 		}
 
 		$this->put($stub);

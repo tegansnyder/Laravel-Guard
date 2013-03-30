@@ -46,11 +46,19 @@ class GuardRefreshCommand extends Command {
 	 */
 	public function fire()
 	{
-		$this->guardFile->updateSignature('concat-js');
-		$this->guardFile->updateSignature('concat-css');
-		$this->guardFile->updateSignature('coffeescript');
-		$this->guardFile->updateSignature('sass');
-		$this->guardFile->updateSignature('uglify');
+		$plugins = array(
+			'concat-css',
+			'concat-js',
+			'coffeescript',
+			'sass',
+			'uglify',
+			'refresher'
+		);
+
+		foreach($plugins as $plugin)
+		{
+			$this->guardFile->updateSignature($plugin);
+		}
 	}
 
 }

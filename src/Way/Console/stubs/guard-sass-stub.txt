@@ -1,1 +1,1 @@
-guard 'sass', :input => '{{assetsPath}}/sass', :output => '{{cssPath}}'
+guard :sass, :input => '{{assetsPath}}/sass', :output => '{{cssPath}}'

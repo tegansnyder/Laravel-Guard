@@ -29,7 +29,7 @@ class GuardMakeCommand extends Command {
 	 *
 	 * @var array
 	 */
-	protected $plugins = array('concat-js', 'concat-css', 'uglify', 'phpunit', 'shell');
+	protected $plugins = array('concat-js', 'concat-css', 'uglify', 'phpunit', 'refresher');
 
 	/**
 	 * File generator instance
@@ -128,7 +128,7 @@ class GuardMakeCommand extends Command {
 	{
 		$this->info('Ensuring that you have all required plugins...');
 
-		$requiredGems = array('guard', 'guard-uglify', 'guard-phpunit', 'guard-concat', 'guard-shell');
+		$requiredGems = array('guard', 'guard-uglify', 'guard-phpunit', 'guard-concat');
 
 		foreach($requiredGems as $gem)
 		{
