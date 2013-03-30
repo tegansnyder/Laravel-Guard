@@ -1,11 +1,27 @@
 <?php
 
 return array(
-	// What is the path to your JavaScripts folder?
-	'js_path' 		=> 'public/js',
+	/*
+	|--------------------------------------------------------------------------
+	| The JavaScripts Path
+	|--------------------------------------------------------------------------
+	|
+	| This is where you can specify a custom path to your JavaScripts
+	| directory. We've set a sensible default, but feel free to update it.
+	|
+	*/
+	'js_path' => 'public/js',
 
-	// What is the path to your CSS folder?
-	'css_path'  	=> 'public/css',
+	/*
+	|--------------------------------------------------------------------------
+	| The Stylesheets Path
+	|--------------------------------------------------------------------------
+	|
+	| This is where you can specify a custom path to your Stylesheets
+	| directory. We've set a sensible default, but feel free to update it.
+	|
+	*/
+	'css_path' => 'public/css',
 
 	/*
 	|--------------------------------------------------------------------------
@@ -17,31 +33,33 @@ return array(
 	| will be inserted.
 	|
 	*/
-	'assets_path'   => 'app/assets',
+	'assets_path' => 'app/assets',
 
 	/*
 	|--------------------------------------------------------------------------
 	| JavaScript Concatenation
 	|--------------------------------------------------------------------------
 	|
-	| Here is where you'll specify the list of JavaScript files, in order,
-	| that you want to have concatenated. Specify your paths relative to
-	| what you have set in the `js_path` option, above. So, for `public/js/main.js`,
+	| By default, we're going to concat all files from your JavaScript directory,
+	| but that's probably not what you want. When you need to set a specific order
+	| for concatenation, set this value to an array of paths that are relative
+	| to what you have set in the `js_path` option, above. So, for `public/js/main.js`,
 	| you'd simply add `array('main')` (the extension may be left off).
 	|
 	*/
-	'js_concat'		=> array(),
+	'js_concat' => \File::files('public/js'),
 
 	/*
 	|--------------------------------------------------------------------------
 	| CSS Concatenation
 	|--------------------------------------------------------------------------
 	|
-	| Here is where you'll specify the list of CSS files, in order,
-	| that you want to have concatenated. Specify your paths relative to
-	| what you have set in the `css_path` option, above. So, for `public/css/buttons.css`,
+	| By default, we're going to concat all files from your CSS directory,
+	| but that's probably not what you want. When you need to set a specific order
+	| for concatenation, set this value to an array of paths that are relative
+	| to what you have set in the `js_path` option, above. So, for `public/css/buttons.css`,
 	| you'd simply add `array('buttons')` (the extension may be left off).
 	|
 	*/
-	'css_concat'	=> array()
+	'css_concat' => \File::files('public/css')
 );

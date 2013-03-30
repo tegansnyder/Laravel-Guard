@@ -1,6 +1,7 @@
 <?php namespace Way\Console;
 
 use Illuminate\Console\Command;
+use Illuminate\Config\Repository;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputArgument;
 
@@ -21,22 +22,30 @@ class GuardRefreshCommand extends Command {
 	protected $description = 'Refresh the Guardfile';
 
 	/**
-	 * Guard Generator instance
+	 * GuardFile instance
 	 *
-	 * @var GuardGeneartor
+	 * @var Way\Console\GuardFile
 	 */
-	protected $generate;
+	protected $guardFile;
+
+	/**
+	 * Config
+	 *
+	 * @var Illuminate\Config\Repository
+	 */
+	protected $config;
 
 	/**
 	 * Create a new command instance.
 	 *
 	 * @return void
 	 */
-	public function __construct(GuardGenerator $generate)
+	public function __construct(Guardfile $guardFile, Repository $config)
 	{
-		$this->generate = $generate;
-
 		parent::__construct();
+
+		$this->guardFile = $guardFile;
+		$this->config = $config;
 	}
 
 	/**
@@ -46,17 +55,29 @@ class GuardRefreshCommand extends Command {
 	 */
 	public function fire()
 	{
-		$this->generate->guardFile(explode(' ', $this->getPluginListFromStorage()), base_path());
+		$this->updateGuardfile();
 	}
 
 	/**
-	 * Fetches latest list of user requested Guard plugins
+	 * Refresh the Guardfile
 	 *
-	 * @return string|Exception
+	 * @return void
 	 */
-	protected function getPluginListFromStorage()
+	protected function updateGuardfile()
 	{
-		return \File::get(app_path() .'/storage/guard/plugins.txt');
+		// First, we'll grab an updated list of the JS and CSS
+		// files that should be concatenated.
+		$jsList = $this->config->get('guard-laravel::guard.js_concat');
+		$cssList = $this->config->get('guard-laravel::guard.css_concat');
+
+		// Next, we'll update both the concat-js and concat-css plugins
+		// to reflect the new list of files.
+		$contents = $this->guardFile->updateConcatPlugin('js', $jsList);
+		$contents = $this->guardFile->updateConcatPlugin('css', $cssList, $contents);
+
+		// Lastly, we replace the old Guardfile
+		// with the new one.
+		$this->guardFile->put($contents);
 	}
 
 }

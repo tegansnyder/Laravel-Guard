@@ -63,7 +63,8 @@ class GuardInitCommand extends Command {
 	 * Create a new command instance.
 	 *
 	 * @param GuardGenerator $generate
-	 *
+	 * @param Filesystem $file
+	 * @param Gem $gem
 	 * @return void
 	 */
 	public function __construct(GuardGenerator $generate, Filesystem $file, Gem $gem)
@@ -126,8 +127,6 @@ class GuardInitCommand extends Command {
 
 		$this->generate->guardFile($this->plugins, base_path());
 		$this->info('Created Guardfile');
-
-		$this->savePluginListToCache();
 	}
 
 	/**
@@ -202,23 +201,6 @@ class GuardInitCommand extends Command {
 	protected function wantsCoffee()
 	{
 		return $this->confirm('What about CoffeeScript support? [yes|no]', false);
-	}
-
-	/**
-	 * Keep a log of user's requested gems
-	 *
-	 * @return void
-	 */
-	protected function savePluginListToCache()
-	{
-		$cache = app_path().'/storage/guard';
-		if (! $this->file->exists($cache))
-		{
-			$this->file->makeDirectory($cache);
-		}
-
-		// We'll store a space separated list of all requested plugins.
-		$this->file->put($cache .'/plugins.txt', implode(' ', $this->plugins));
 	}
 
 }

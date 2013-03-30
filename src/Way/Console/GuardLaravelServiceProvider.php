@@ -32,10 +32,10 @@ class GuardLaravelServiceProvider extends ServiceProvider {
 	 */
 	protected function registerMake()
 	{
-		// guard:make
 		$this->app['guard.make'] = $this->app->share(function($app)
 		{
-			$generator = new GuardGenerator($app['files'], \Config::getFacadeRoot());
+			$guardFile = new Guardfile($app['files'], base_path());
+			$generator = new GuardGenerator($app['files'], \Config::getFacadeRoot(), $guardFile);
 			$gem = new Gem;
 
 			return new GuardInitCommand($generator, $app['files'], $gem);
@@ -49,7 +49,6 @@ class GuardLaravelServiceProvider extends ServiceProvider {
 	 */
 	protected function registerWatch()
 	{
-		// guard:watch
 		$this->app['guard.watch'] = $this->app->share(function($app)
 		{
 			return new GuardWatchCommand;
@@ -63,12 +62,11 @@ class GuardLaravelServiceProvider extends ServiceProvider {
 	 */
 	protected function registerRefresh()
 	{
-		// guard:refresh
 		$this->app['guard.refresh'] = $this->app->share(function($app)
 		{
-			$generator = new GuardGenerator($app['files'], \Config::getFacadeRoot());
+			$guardFile = new Guardfile($app['files'], base_path());
 
-			return new GuardRefreshCommand($generator);
+			return new GuardRefreshCommand($guardFile, $app['config']);
 		});
 	}
 
@@ -84,6 +82,16 @@ class GuardLaravelServiceProvider extends ServiceProvider {
 			'guard.watch',
 			'guard.refresh'
 		);
+	}
+
+	/**
+	 * Bootstrap the application events.
+	 *
+	 * @return void
+	 */
+	public function boot()
+	{
+		$this->package('way/guard-laravel');
 	}
 
 	/**
