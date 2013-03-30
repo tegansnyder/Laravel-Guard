@@ -2,6 +2,8 @@
 
 use Illuminate\Filesystem\Filesystem;
 
+class FileNotFoundException extends \Exception {}
+
 class Guardfile {
 
 	/**
@@ -52,31 +54,6 @@ class Guardfile {
 	}
 
 	/**
-	 * Update Guardfile concat plugins with new file list
-	 *
-	 * @param  string $type
-	 * @param  array $fileList
-	 * @param string $content
-	 * @return string
-	 */
-	public function updateConcatPlugin($type, array $fileList, $content = null)
-	{
-		$content = $content ?: $this->getContents();
-
-		$fileList = $this->removeMergedFilesFromList($fileList);
-
-		return preg_replace_callback(
-			'/(?<=guard :concat, type: "' . $type . '", files: %w\[).+?(?=\])/i',
-			function($matches) use($fileList) {
-				// We need Ruby specific array formatting.
-				// The concat plugin doesn't want file extensions. :(
-				return implode(' ', $this->removeFileExtensions($fileList));
-			},
-			$content
-		);
-	}
-
-	/**
 	 * Update contents of Guardfile
 	 *
 	 * @param string $contents
@@ -85,6 +62,120 @@ class Guardfile {
 	public function put($contents)
 	{
 		$this->file->put($this->getPath(), $contents);
+	}
+
+	/**
+	 * Get stubs for requested plugins
+	 *
+	 * @param  array  $plugins
+	 * @return string
+	 */
+	public function getStubs(array $plugins)
+	{
+		$stubs = array();
+
+		foreach($plugins as $plugin)
+		{
+	        // The concat plugin needs special treatment.
+			$stub = starts_with($plugin, 'concat')
+				? $this->getConcatStub($plugin)
+				: $this->getPluginStub($plugin);
+
+			$stubs[] = $this->applyPathsToStub($stub);
+		}
+
+	    // Now, we'll stitch them all together
+		return implode("\n\n", $stubs);
+	}
+
+	/**
+	 * Gets the stub for a Guard plugin
+	 *
+	 * @param  string $plugin
+	 * @return string
+	 */
+	public function getPluginStub($plugin)
+	{
+		$stubPath = __DIR__ . "/stubs/guard-{$plugin}-stub.txt";
+
+		if (file_exists($stubPath))
+		{
+			return $this->file->get($stubPath);
+		}
+
+		throw new FileNotFoundException;
+	}
+
+	/**
+	 * Gets a compiled stub for a concat plugin
+	 *
+	 * @param  string $plugin
+	 * @return string
+	 */
+	protected function getConcatStub($plugin)
+	{
+		// concat-css, concat-js
+		$language = substr($plugin, 7);
+
+		$files = $this->getConcatFiles(substr($plugin, 7));
+
+		return str_replace('{{files}}', implode(' ', $files), $this->getPluginStub("concat-{$language}"));
+	}
+
+	/**
+	 * Replace template tags in stub
+	 *
+	 * @param  string $stub
+	 * @return string
+	 */
+	public function applyPathsToStub($stub)
+	{
+		return preg_replace_callback('/{{([a-z]+?)Path}}/i', function($matches) {
+			$language = $matches[1];
+
+			return \Config::get("guard-laravel::guard.{$language}_path");
+		}, $stub);
+	}
+
+	/**
+	 * Update concat plugin signature and saves file
+	 *
+	 * @param  string $plugin
+	 * @return void
+	 */
+	public function updateSignature($plugin)
+	{
+		$language = substr($plugin, 7) === 'js' ? 'js' : 'css';
+
+		$files = $this->getConcatFiles($language);
+
+		$stub = $this->compile($files, $language);
+
+		// Final step is to replace the Guardfile function with the updated one
+		$stub = preg_replace('/guard :concat, type: "' . $language . '".+/i', $stub, $this->getContents());
+		$this->put($stub);
+	}
+
+	/**
+	 * Gets the stub for guard-concat
+	 *
+	 * @param  string $plugin
+	 * @return string
+	 */
+	public function getConcatFiles($language)
+	{
+		$files = \Config::get("guard-laravel::guard.{$language}_concat");
+
+		return $this->removeFileExtensions($this->removeMergedFilesFromList($files));
+	}
+
+	protected function compile($files, $language)
+	{
+	    // Now, we'll grab the concat stub, and replace it with the
+	    // Ruby-formatted array of JS files.
+		$stub = str_replace('{{files}}', implode(' ', $files), $this->getPluginStub("concat-{$language}"));
+
+		return $this->applyPathsToStub($stub);
 	}
 
 	/**
@@ -112,7 +203,7 @@ class Guardfile {
 		return array_map(function($file)
 		{
 			return pathinfo($file, PATHINFO_FILENAME);
-		}, array_diff($fileList, array('scripts.min', 'style.min')));
+		}, $fileList);
 	}
 
 }

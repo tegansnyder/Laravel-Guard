@@ -28,17 +28,17 @@ class GuardLaravelServiceProvider extends ServiceProvider {
 	/**
 	 * Register guard.make
 	 *
-	 * @return Way\Console\GuardInitCommand
+	 * @return Way\Console\GuardMakeCommand
 	 */
 	protected function registerMake()
 	{
 		$this->app['guard.make'] = $this->app->share(function($app)
 		{
 			$guardFile = new Guardfile($app['files'], base_path());
-			$generator = new GuardGenerator($app['files'], \Config::getFacadeRoot(), $guardFile);
+			$generator = new GuardGenerator($app['files'], $guardFile);
 			$gem = new Gem;
 
-			return new GuardInitCommand($generator, $app['files'], $gem);
+			return new GuardMakeCommand($generator, $gem, $app['config']);
 		});
 	}
 
@@ -66,7 +66,7 @@ class GuardLaravelServiceProvider extends ServiceProvider {
 		{
 			$guardFile = new Guardfile($app['files'], base_path());
 
-			return new GuardRefreshCommand($guardFile, $app['config']);
+			return new GuardRefreshCommand($guardFile);
 		});
 	}
 

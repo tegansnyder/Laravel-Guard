@@ -49,13 +49,13 @@ Unless you specify custom paths for these directories, LaravelGuard will use sen
 - **JS**: public/js
 - **CSS**: public/css
 
-To override these defaults, publish the default configuration options to your `app/config` directory.
+To override these defaults, publish the default configuration options to your `app/config` directory. You'll only have to do this once per project, of course.
 
 ```bash
 php artisan config:publish way/guard-laravel
 ```
 
-You may now edit these options at `app/config/packages/way/guard-laravel/guard.php`.
+You may now edit these options at `app/config/packages/way/guard-laravel/guard.php`. When you do, your Guardfile will automatically update to reflect the changes.
 
 
 ## Sass/Less/CoffeeScript Compilation
@@ -75,12 +75,6 @@ If you save the file, nothing will happen. We have to tell Guard to begin watchi
 By default, when concatenating JavaScript and CSS, this package will simply grab all of the files in their respective directories, and concatenate them in, essentially, random order. Most of the time, this won't be acceptable.
 
 When you need to specify the order, do so in `app/config/packages/way/guard-laravel/guard.php`. Within this file, edit `js_concat` and `css_concat` to contain a list of the files, in order, that you want to merge and minify.
-
-> Every time you update either of these two options, you need to refresh your Guardfile. This allows Guard to pull from the config file, and update the list of files to merge on save.
-
-```bash
-php artisan guard:refresh
-```
 
 ## Continuous Testing
 
@@ -106,8 +100,5 @@ php artisan guard:watch
 # Edit a test, and PHPUnit fires
 
 # Update `app/config/packages/way/guard-laravel/guard.php` with your CSS and JS concat order
-php artisan guard:refresh
-php artisan guard:watch
-
 # Save JS file, and, in the order your specified, JavaScripts will be concatenated and minified.
 ```

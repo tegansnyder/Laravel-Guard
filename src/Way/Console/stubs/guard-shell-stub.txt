@@ -1,0 +1,5 @@
+guard :shell do
+  watch(%r{app/config/packages/way/guard-laravel/guard.php}) do |m|
+    `php artisan guard:refresh`
+  end
+end
