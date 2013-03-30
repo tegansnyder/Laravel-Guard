@@ -78,8 +78,8 @@ class Guardfile {
 		{
 	        // The concat plugin needs special treatment.
 			$stub = starts_with($plugin, 'concat')
-				? $this->getConcatStub($plugin)
-				: $this->getPluginStub($plugin);
+				  ? $this->getConcatStub($plugin)
+				  : $this->getPluginStub($plugin);
 
 			$stubs[] = $this->applyPathsToStub($stub);
 		}
@@ -117,7 +117,7 @@ class Guardfile {
 		// concat-css, concat-js
 		$language = substr($plugin, 7);
 
-		$files = $this->getConcatFiles($language);
+		$files = $this->getFilesToConcat($language);
 
 		return str_replace('{{files}}', implode(' ', $files), $this->getPluginStub("concat-{$language}"));
 	}
@@ -147,7 +147,7 @@ class Guardfile {
 	{
 		$language = substr($plugin, 7) === 'js' ? 'js' : 'css';
 
-		$files = $this->getConcatFiles($language);
+		$files = $this->getFilesToConcat($language);
 
 		$stub = $this->compile($files, $language);
 
@@ -162,7 +162,7 @@ class Guardfile {
 	 * @param  string $plugin
 	 * @return string
 	 */
-	public function getConcatFiles($language)
+	public function getFilesToConcat($language)
 	{
 		$files = \Config::get("guard-laravel::guard.{$language}_concat");
 
