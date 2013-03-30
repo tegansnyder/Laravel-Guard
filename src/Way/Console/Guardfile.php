@@ -145,13 +145,8 @@ class Guardfile {
 	 */
 	public function updateSignature($plugin)
 	{
-		$language = substr($plugin, 7) === 'js' ? 'js' : 'css';
-
-		$files = $this->getFilesToConcat($language);
-
-		$stub = $this->compile($files, $language);
-
-		// Final step is to replace the Guardfile function with the updated one
+		$language = substr($plugin, 7);
+		$stub = $this->applyPathsToStub($this->getConcatStub($plugin));
 		$stub = preg_replace('/guard :concat, type: "' . $language . '".+/i', $stub, $this->getContents());
 		$this->put($stub);
 	}
@@ -167,15 +162,6 @@ class Guardfile {
 		$files = \Config::get("guard-laravel::guard.{$language}_concat");
 
 		return $this->removeFileExtensions($this->removeMergedFilesFromList($files));
-	}
-
-	protected function compile($files, $language)
-	{
-	    // Now, we'll grab the concat stub, and replace it with the
-	    // Ruby-formatted array of JS files.
-		$stub = str_replace('{{files}}', implode(' ', $files), $this->getPluginStub("concat-{$language}"));
-
-		return $this->applyPathsToStub($stub);
 	}
 
 	/**
