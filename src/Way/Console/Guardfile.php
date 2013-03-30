@@ -117,7 +117,7 @@ class Guardfile {
 		// concat-css, concat-js
 		$language = substr($plugin, 7);
 
-		$files = $this->getConcatFiles(substr($plugin, 7));
+		$files = $this->getConcatFiles($language);
 
 		return str_replace('{{files}}', implode(' ', $files), $this->getPluginStub("concat-{$language}"));
 	}
