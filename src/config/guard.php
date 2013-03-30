@@ -34,7 +34,7 @@ return array(
 	| will be inserted.
 	|
 	*/
-	'assets_path' => 'app/a',
+	'assets_path' => 'app/assets',
 
 	/*
 	|--------------------------------------------------------------------------
