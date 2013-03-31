@@ -109,7 +109,7 @@ class Guardfile {
 			return $this->file->get($stubPath);
 		}
 
-		throw new FileNotFoundException;
+		throw new FileNotFoundException('Plugin name or stub not recognized');
 	}
 
 	/**
