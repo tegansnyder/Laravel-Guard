@@ -1,4 +1,4 @@
-# Easy Asset Management in Laravel (Alpha)
+# Easy Asset Management in Laravel (Beta)
 
 This plugin improves asset management in Laravel, by:
 
@@ -8,6 +8,8 @@ This plugin improves asset management in Laravel, by:
 - Concatenating and minifying JavaScript and CSS (if not using a preprocessor)
 
 ## Installation
+
+> Before continuing, this package requires Ruby and Rubygems. Please install those first
 
 Install this package through Composer. To your `composer.json` file, add:
 
@@ -29,7 +31,7 @@ Finally, add the service provider to `app/config/app.php`, within the `providers
 )
 ```
 
-That's it. Run `php artisan` to view the three new Guard commands:
+That's it! Run `php artisan` to view the three new Guard commands:
 
 - **guard:make** - Create a new Guardfile, and specify desired preprocessors
 - **guard:watch** - Begin watching filesystem for changes, and run tests
@@ -41,7 +43,7 @@ The first step is to install the necessary dependencies (done automatically for 
 
 ## Configuring Paths
 
-Unless you specify custom paths for these directories, LaravelGuard will use sensible defaults.
+Unless you specify custom paths for these directories, Guard-Laravel will use sensible defaults.
 
 - **Sass**: app/assets/sass
 - **Less**: app/assets/less
@@ -60,7 +62,7 @@ You may now edit these options at `app/config/packages/way/guard-laravel/guard.p
 
 ## Sass/Less/CoffeeScript Compilation
 
-After you've generated a Guardfile with `php artisan guard:make` (which will also download any necessary dependencies), you'll see a new `app/assets` directory. This is where your Sass/Less/CoffeeScript files will be store. Try creating a new file, `app/assets/sass/buttons.sass`, and add:
+After you've generated a Guardfile with `php artisan guard:make` (which will also download any necessary dependencies), you'll see a new `app/assets` directory. This is where your Sass/Less/CoffeeScript files will be stored. Try creating a new file, `app/assets/sass/buttons.sass`, and add:
 
 ```css
 .button
@@ -74,7 +76,11 @@ If you save the file, nothing will happen. We have to tell Guard to begin watchi
 
 By default, when concatenating JavaScript and CSS, this package will simply grab all of the files in their respective directories, and concatenate them in, essentially, random order. Most of the time, this won't be acceptable.
 
-When you need to specify the order, do so in `app/config/packages/way/guard-laravel/guard.php`. Within this file, edit `js_concat` and `css_concat` to contain a list of the files, in order, that you want to merge and minify.
+When you need to specify the order, do so in `app/config/packages/way/guard-laravel/guard.php` (which we created above). Within this file, edit `js_concat` and `css_concat` to contain a list of the files, in order, that you want to merge and minify.
+
+```php
+js_concat => ['module1', 'module2', 'module3']
+```
 
 ## Continuous Testing
 
@@ -88,17 +94,39 @@ Guard will run PHPUnit:
 2. When a view file is saved, all tests will run. You may want to update this to only run integration tests
 3. When any class file is saved, it will attempt to find an associated test and call it. For example, save `app/models/User.php`, and it will test `app/tests/models/UserTest.php`.
 
+
+## Guard Plugin Options
+
+Unless adding new or custom Guards, you should never modify the Guardfile. This is because many of the settings are generated dynamically. In the instances when you want to add options for a plugin (such as selecting compressed Sass over the default nested), specify them as an array within `app/config/packages/way/guard-laravel/guard.php`.
+
+Set the key to the name of the guard plugin (see the Guardfile) The value should be an array of config options. Refer to the plugin readmes on GitHub for a full list of options. Below is an example for [Sass config](https://github.com/hawx/guard-sass).
+
+```php
+'guard_options' => array(
+	'sass' => array(
+		'line_numbers' => true,
+		'style'		   => ':compressed'
+	)
+)
+```
+
 ## Workflow
 
 Here's a basic bit of workflow for a new project. First, install package through Composer. Then:
 
 ```bash
+# Create a new guard file
 php artisan guard:make
+
+# Begin watching filesystem for changes
 php artisan guard:watch
 
-# Edit Sass or CoffeeScript file, and will auto-compile
+# Edit Sass or CoffeeScript file, and watch it auto-compile
 # Edit a test, and PHPUnit fires
 
-# Update `app/config/packages/way/guard-laravel/guard.php` with your CSS and JS concat order
-# Save JS file, and, in the order your specified, JavaScripts will be concatenated and minified.
+# Update `app/config/packages/way/guard-laravel/guard.php` with any config overrides
+# Update js_concat to an ordered list of your JS files. Now, they'll be concatenated in
+# that exact order.
 ```
+
+Have fun!
