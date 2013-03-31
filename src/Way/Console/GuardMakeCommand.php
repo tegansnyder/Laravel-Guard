@@ -122,7 +122,7 @@ class GuardMakeCommand extends Command {
 	{
 		$this->info('Ensuring that you have all required plugins...');
 
-		$requiredGems = array('guard', 'guard-uglify', 'guard-phpunit', 'guard-concat');
+		$requiredGems = array('guard', 'guard-uglify', 'guard-phpunit', 'guard-concat', 'cssmin');
 
 		foreach($requiredGems as $gem)
 		{

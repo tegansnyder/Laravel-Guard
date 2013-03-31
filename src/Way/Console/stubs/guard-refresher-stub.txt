@@ -18,10 +18,16 @@ module ::Guard
   end
 end
 
+require 'cssmin'
+
 guard :refresher do
   watch(%r[{{jsPath}}/.+])
   watch(%r[{{cssPath}}/.+])
   watch(%r{app/config/packages/way/guard-laravel/guard.php}) do |m|
     `php artisan guard:refresh`
+  end
+  watch('{{cssPath}}/style.min.css') do |m|
+    css = File.read(m[0])
+    File.open(m[0], 'w') { |file| file.write(CSSMin.minify(css)) }
   end
 end
