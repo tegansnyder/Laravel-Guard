@@ -29,7 +29,7 @@ class GuardMakeCommand extends Command {
 	 *
 	 * @var array
 	 */
-	protected $plugins = array('concat-js', 'concat-css', 'uglify', 'refresher', 'phpunits');
+	protected $plugins = array('concat-js', 'concat-css', 'uglify', 'refresher', 'phpunit');
 
 	/**
 	 * File generator instance
