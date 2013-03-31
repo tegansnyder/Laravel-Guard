@@ -1,6 +1,8 @@
 <?php namespace Way\Console;
 
 use Illuminate\Filesystem\Filesystem;
+use Way\Helpers\File as FileHelpers;
+use Way\Helpers\Helpers as Helpers;
 
 class FileNotFoundException extends \Exception {}
 
@@ -165,7 +167,7 @@ class Guardfile {
 		// then format them as Ruby, and search+replace
 		if (! empty($pluginOptions))
 		{
-			$rubyFormattedOptions = $this->attributes($pluginOptions);
+			$rubyFormattedOptions = Helpers::arrayToRuby($pluginOptions);
 			$stub = str_replace('{{options}}', ', ' . implode(', ', $rubyFormattedOptions), $stub);
 		}
 
@@ -187,34 +189,6 @@ class Guardfile {
 		$files = $this->getFilesToConcat($language);
 
 		return str_replace('{{files}}', implode(' ', $files), $stub);
-	}
-
-	/**
-	 * Format PHP array to Ruby syntax
-	 *
-	 * @param  array $pluginOptions
-	 * @return array
-	 */
-	protected function attributes(array $pluginOptions)
-	{
-		$rubyFormattedOptions = array();
-
-		foreach($pluginOptions as $key => $val)
-		{
-			$val = var_export($val, true);
-
-			// Some values can be set as symbols
-			// If so, we need to convert them for Ruby
-			if (starts_with($val, "':"))
-			{
-				// ':compressed' to :compressed
-				$val = trim($val, "'");
-			}
-
-			$rubyFormattedOptions[] =  ":$key => $val";
-		}
-
-		return $rubyFormattedOptions;
 	}
 
 	/**
@@ -252,40 +226,7 @@ class Guardfile {
 	{
 		$files = $this->getConfigOption("{$language}_concat");
 
-		return $this->removeFileExtensions($this->removeMergedFilesFromList($files));
-	}
-
-	/**
-	 * We don't want merged file to ever be included.
-	 *
-	 * @param  array  $fileList
-	 * @return array
-	 */
-	protected function removeMergedFilesFromList(array $fileList)
-	{
-		return array_filter($fileList, function($file)
-		{
-			return ! preg_match('/\.min\.(js|css)$/i', $file);
-		});
-	}
-
-	/**
-	 * Removes extensions from array of files
-	 *
-	 * @param  array $fileList
-	 * @return string
-	 */
-	public function removeFileExtensions(array $fileList)
-	{
-		return array_map(function($file)
-		{
-			// If no extension is present, then it's set in the
-			// config file, like vendor/jquery. In those cases,
-			// just return the $file as it is.
-			if (! pathinfo($file, PATHINFO_EXTENSION)) return $file;
-
-			return pathinfo($file, PATHINFO_FILENAME);
-		}, $fileList);
+		return FileHelpers::removeExtensions(FileHelpers::deleteMinified($files));
 	}
 
 }

@@ -48,7 +48,7 @@ return array(
 	| you'd simply add `array('main')` (the extension may be left off).
 	|
 	*/
-	'js_concat' => \File::files('public/js'),
+	'js_concat' => Way\Helpers\File::withoutExtensionsFrom('public/js'),
 
 	/*
 	|--------------------------------------------------------------------------
@@ -62,7 +62,7 @@ return array(
 	| you'd simply add `array('buttons')` (the extension may be left off).
 	|
 	*/
-	'css_concat' => \File::files('public/css'),
+	'css_concat' => Way\Helpers\File::withoutExtensionsFrom('public/css'),
 
 	/*
 	|--------------------------------------------------------------------------
