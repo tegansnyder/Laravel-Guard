@@ -251,6 +251,7 @@ class Guardfile {
 	public function getFilesToConcat($language)
 	{
 		$files = $this->getConfigOption("{$language}_concat");
+
 		return $this->removeFileExtensions($this->removeMergedFilesFromList($files));
 	}
 
