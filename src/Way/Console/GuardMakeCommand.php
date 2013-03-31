@@ -46,13 +46,6 @@ class GuardMakeCommand extends Command {
 	protected $gem;
 
 	/**
-	 * Config
-	 *
-	 * @var Illuminate\Config\Repository
-	 */
-	protected $config;
-
-	/**
 	 * Path to assets directory
 	 *
 	 * @var string
