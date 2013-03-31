@@ -118,13 +118,16 @@ Here's a basic bit of workflow for a new project. First, install package through
 # Create a new guard file
 php artisan guard:make
 
+# Publish config options to tailor to your project
+php artisan config:publish way/guard-laravel
+
 # Begin watching filesystem for changes
 php artisan guard:watch
+# or just - guard
 
 # Edit Sass or CoffeeScript file, and watch it auto-compile
 # Edit a test, and PHPUnit fires
 
-# Update `app/config/packages/way/guard-laravel/guard.php` with any config overrides
 # Update js_concat to an ordered list of your JS files. Now, they'll be concatenated in
 # that exact order.
 ```
