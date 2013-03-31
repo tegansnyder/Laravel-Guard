@@ -46,6 +46,8 @@ class GuardRefreshCommand extends Command {
 	 */
 	public function fire()
 	{
+		// todo can't hardcode these.
+		// what if using Less? or none?
 		$plugins = array(
 			'concat-css',
 			'concat-js',

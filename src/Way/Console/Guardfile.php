@@ -65,6 +65,17 @@ class Guardfile {
 	}
 
 	/**
+	 * Get a guard configuration option
+	 *
+	 * @param  string $option
+	 * @return mixed
+	 */
+	protected function getConfigOption($option)
+	{
+		return \Config::get("guard-laravel::guard.{$option}");
+	}
+
+	/**
 	 * Get stubs for requested plugins
 	 *
 	 * @param  array  $plugins
@@ -76,12 +87,7 @@ class Guardfile {
 
 		foreach($plugins as $plugin)
 		{
-	        // The concat plugin needs special treatment.
-			$stub = starts_with($plugin, 'concat')
-				  ? $this->getConcatStub($plugin)
-				  : $this->getPluginStub($plugin);
-
-			$stubs[] = $this->applyPathsToStub($stub);
+			$stubs[] = $this->compile($this->getPluginStub($plugin), $plugin);
 		}
 
 	    // Now, we'll stitch them all together
@@ -107,19 +113,26 @@ class Guardfile {
 	}
 
 	/**
-	 * Gets a compiled stub for a concat plugin
+	 * Perform search and replace on stub
+	 * with data from user config
 	 *
+	 * @param  string $stub
 	 * @param  string $plugin
 	 * @return string
 	 */
-	protected function getConcatStub($plugin)
+	public function compile($stub, $plugin)
 	{
-		// concat-css, concat-js
-		$language = substr($plugin, 7);
+		$stub = $this->applyPathsToStub($stub);
+		$stub = $this->applyOptions($stub, $plugin);
 
-		$files = $this->getFilesToConcat($language);
+		// If we're updating the concat guard plugin,
+		// then we need to update the file list, too
+		if (starts_with($plugin, 'concat'))
+		{
+			$stub = $this->applyFileList($stub, substr($plugin, 7));
+		}
 
-		return str_replace('{{files}}', implode(' ', $files), $this->getPluginStub("concat-{$language}"));
+		return $stub;
 	}
 
 	/**
@@ -133,30 +146,95 @@ class Guardfile {
 		return preg_replace_callback('/{{([a-z]+?)Path}}/i', function($matches) {
 			$language = $matches[1];
 
-			return \Config::get("guard-laravel::guard.{$language}_path");
+			return $this->getConfigOption("{$language}_path");
 		}, $stub);
 	}
 
 	/**
-	 * Update concat plugin signature and saves file
-	 * TODO: this isn't sustainable. Need a better
-	 * way to recompile.
+	 * Set options for guard plugin
+	 *
+	 * @param  string $stub
+	 * @param string $plugin
+	 * @return string
+	 */
+	protected function applyOptions($stub, $plugin)
+	{
+		$pluginOptions = $this->getConfigOption("guard_options.{$plugin}");
+
+		// If options have been set for this guard
+		// then format them as Ruby, and search+replace
+		if (! empty($pluginOptions))
+		{
+			$rubyFormattedOptions = $this->attributes($pluginOptions);
+			$stub = str_replace('{{options}}', ', ' . implode(', ', $rubyFormattedOptions), $stub);
+		}
+
+		// Otherwise, no options specified.
+		$stub = str_replace('{{options}}', '', $stub);
+
+		return $stub;
+	}
+
+	/**
+	 * Replace stub with updated file list
+	 *
+	 * @param  string $stub
+	 * @param string language [css|js]
+	 * @return string
+	 */
+	protected function applyFileList($stub, $language)
+	{
+		$files = $this->getFilesToConcat($language);
+
+		return str_replace('{{files}}', implode(' ', $files), $stub);
+	}
+
+	/**
+	 * Format PHP array to Ruby syntax
+	 *
+	 * @param  array $pluginOptions
+	 * @return array
+	 */
+	protected function attributes(array $pluginOptions)
+	{
+		$rubyFormattedOptions = array();
+
+		foreach($pluginOptions as $key => $val)
+		{
+			$val = var_export($val, true);
+
+			// Some values can be set as symbols
+			// If so, we need to convert them for Ruby
+			if (starts_with($val, "':"))
+			{
+				// ':compressed' to :compressed
+				$val = trim($val, "'");
+			}
+
+			$rubyFormattedOptions[] =  ":$key => $val";
+		}
+
+		return $rubyFormattedOptions;
+	}
+
+	/**
+	 * Update plugin signature and save file
 	 *
 	 * @param  string $plugin
 	 * @return void
 	 */
 	public function updateSignature($plugin)
 	{
-		// Concat plugins need some special traetment.
+		$stub = $this->compile($this->getPluginStub($plugin), $plugin);
+
+		// Concat plugins need special search+replace.
 		if (starts_with($plugin, 'concat'))
 		{
 			$language = substr($plugin, 7);
-			$stub = $this->applyPathsToStub($this->getConcatStub($plugin));
 			$stub = preg_replace('/guard :concat, type: "' . $language . '".+/i', $stub, $this->getContents());
 		}
 		else
 		{
-			$stub = $this->applyPathsToStub($this->getPluginStub($plugin));
 			$module = $plugin === 'refresher' ? '(module.+?)?' : '';
 			$stub = preg_replace("/{$module}guard :" . $plugin . ".+?(?=\\n\\n|$)/us", $stub, $this->getContents());
 		}
@@ -165,15 +243,14 @@ class Guardfile {
 	}
 
 	/**
-	 * Gets the stub for guard-concat
+	 * Get list of files to concat
 	 *
-	 * @param  string $plugin
+	 * @param  string $language
 	 * @return string
 	 */
 	public function getFilesToConcat($language)
 	{
-		$files = \Config::get("guard-laravel::guard.{$language}_concat");
-
+		$files = $this->getConfigOption("{$language}_concat");
 		return $this->removeFileExtensions($this->removeMergedFilesFromList($files));
 	}
 

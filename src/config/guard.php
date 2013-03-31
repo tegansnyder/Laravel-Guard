@@ -62,5 +62,29 @@ return array(
 	| you'd simply add `array('buttons')` (the extension may be left off).
 	|
 	*/
-	'css_concat' => \File::files('public/css')
+	'css_concat' => \File::files('public/css'),
+
+	/*
+	|--------------------------------------------------------------------------
+	| Guard Plugin Options
+	|--------------------------------------------------------------------------
+	|
+	| Unless adding new or custom Guards, you should never modify the
+	| Guardfile. In the instances when you need to add options for
+	| a plugin, specify them as an array here.
+	|
+	| Set the key to the name of the guard plugin (see the Guardfile)
+	| The value should be an array of config options. Refer to the
+	| plugin readmes on GitHub for a full list of options. Below is
+	| an example for Sass config. https://github.com/hawx/guard-sass
+	|
+	*/
+	'guard_options' => array(
+		/*
+		'sass' => array(
+			'line_numbers' => true,
+			'style'		   => ':compressed'
+		)
+		*/
+	)
 );
