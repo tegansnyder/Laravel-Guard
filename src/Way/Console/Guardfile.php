@@ -279,6 +279,11 @@ class Guardfile {
 	{
 		return array_map(function($file)
 		{
+			// If no extension is present, then it's set in the
+			// config file, like vendor/jquery. In those cases,
+			// just return the $file as it is.
+			if (! pathinfo($file, PATHINFO_EXTENSION)) return $file;
+
 			return pathinfo($file, PATHINFO_FILENAME);
 		}, $fileList);
 	}
