@@ -140,9 +140,9 @@ class GuardMakeCommand extends Command {
 	{
 		if (! $this->gem->exists($gemName))
 		{
-			$this->info('Installing ' . ucwords($gemName) . '...');
+			$this->info("Installing $gemName...");
 			$this->gem->install($gemName);
-			$this->info(ucwords($gemName) . ' Installed.');
+			$this->info("The {$gemName} gem has been installed.");
 		}
 	}
 
