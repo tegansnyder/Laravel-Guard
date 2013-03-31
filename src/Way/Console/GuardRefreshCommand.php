@@ -53,6 +53,7 @@ class GuardRefreshCommand extends Command {
 			'concat-js',
 			'coffeescript',
 			'sass',
+			'less',
 			'uglify',
 			'refresher'
 		);
