@@ -195,7 +195,7 @@ class GuardMakeCommand extends Command {
 		$this->plugins[] = $preprocessor;
 
 		$this->getGem("guard-{$preprocessor}");
-		$this->generate->folder("{$this->assetsPath}/{$preprocessor}");
+		$this->generate->folder("{$this->assetsPath}/{$dirName}");
 		$this->info("Created {$this->assetsPath}/{$dirName}");
 	}
 
