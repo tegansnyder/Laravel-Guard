@@ -35,7 +35,7 @@ class GuardGenerator {
      * @param  string $dir
      * @return void
      */
-    public function assetFolder($dir)
+    public function folder($dir)
     {
         if (! $this->file->exists($dir))
         {
@@ -56,6 +56,22 @@ class GuardGenerator {
 
         $stubs = $this->guardFile->getStubs($plugins);
         $this->guardFile->put($stubs);
+    }
+
+    /**
+     * Save a list of requested plugins for future use
+     *s
+     * @param  array $plugins
+     * @param string $logPath
+     * @return void
+     */
+    public function log(array $plugins, $logPath = null)
+    {
+        $logPath = $logPath ?: app_path().'/storage/guard';
+        $this->folder($logPath);
+
+        // We'll store a space separated list of all requested plugins.
+        $this->file->put($logPath .'/plugins.txt', json_encode($plugins));
     }
 
 }

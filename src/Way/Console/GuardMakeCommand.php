@@ -29,7 +29,7 @@ class GuardMakeCommand extends Command {
 	 *
 	 * @var array
 	 */
-	protected $plugins = array('concat-js', 'concat-css', 'uglify', 'phpunit', 'refresher');
+	protected $plugins = array('concat-js', 'concat-css', 'uglify', 'refresher', 'phpunits');
 
 	/**
 	 * File generator instance
@@ -97,6 +97,7 @@ class GuardMakeCommand extends Command {
 		}
 
 		$this->generate->guardFile($this->plugins);
+		$this->generate->log($this->plugins);
 		$this->info('Created Guardfile');
 	}
 
@@ -194,8 +195,7 @@ class GuardMakeCommand extends Command {
 		$this->plugins[] = $preprocessor;
 
 		$this->getGem("guard-{$preprocessor}");
-		$this->generate->assetFolder("{$this->assetsPath}/{$preprocessor}");
-
+		$this->generate->folder("{$this->assetsPath}/{$preprocessor}");
 		$this->info("Created {$this->assetsPath}/{$dirName}");
 	}
 
