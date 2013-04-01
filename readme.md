@@ -122,6 +122,46 @@ Set the key to the name of the guard plugin (see the Guardfile) The value should
 )
 ```
 
+## View Helpers
+
+This package also includes two global helper functions: `stylesheet()` and `script()`. Without any arguments, these two functions spit out the necessary HTML for a stylesheet and script, respectively, using the concatenated/minified file as its `href`/`src`.
+
+```php
+{{ stylesheet() }}
+```
+
+Will create:
+
+```html
+<link rel="stylesheet" href="/css/styles.min.css">
+```
+
+And:
+
+```php
+{{ script() }}
+```
+
+Will create:
+
+```html
+<link rel="stylesheet" href="/js/scripts.min.js">
+```
+
+You can optionally pass an argument to either of these functions, which should reference a file name that is relative to what you have set under `js_path` or `css_path` in the configuration file. For example, to pull in the stylesheet, `public/css/normalize.css`, and assuming that `css_path` is set to `public/css`, simply do:
+
+```php
+{{ stylesheet('normalize.css') }}
+```
+
+This will produce:
+
+```html
+<link rel="stylesheet" href="/css/normalize.css">
+```
+
+
+
 ## Workflow
 
 Here's a basic bit of workflow for a new project. First, install package through Composer. Then:
