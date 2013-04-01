@@ -22,7 +22,7 @@
             "Way": "src/"
         },
         "files": [
-            "src/Way/Helpers/globals.php"
+            "src/Way/globals.php"
         ]
     },
     "minimum-stability": "dev"
