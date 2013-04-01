@@ -10,7 +10,7 @@ if ( ! function_exists('stylesheet'))
 	 * @param  string $path
 	 * @return string
 	 */
-	function stylesheet($path = 'style.min.css')
+	function stylesheet($path = 'styles.min.css')
 	{
 		$path = \Config::get('guard-laravel::guard.css_path') . "/$path";
 		$path = str_replace('public', '', $path);
@@ -29,7 +29,7 @@ if ( ! function_exists('script'))
 	 * @param  string $path
 	 * @return string
 	 */
-	function script($path = 'scripts.min.css')
+	function script($path = 'scripts.min.js')
 	{
 		$path = \Config::get('guard-laravel::guard.js_path') . "/$path";
 		$path = str_replace('public', '', $path);
