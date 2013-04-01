@@ -31,7 +31,7 @@ guard :refresher do
     css = File.read(m[0])
     File.open(m[0], 'w') { |file| file.write(CSSMin.minify(css)) }
   end
-  watch({{jsPath}}/scripts.min.js') do |m|
+  watch('{{jsPath}}/scripts.min.js') do |m|
     js = File.read(m[0])
     File.open(m[0], 'w') { |file| file.write(JSMin.minify(js)) }
   end
