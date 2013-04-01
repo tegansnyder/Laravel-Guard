@@ -22,16 +22,16 @@ require 'cssmin'
 require 'jsmin'
 
 guard :refresher do
-  watch(%r[public/js/.+])
-  watch(%r[public/css/.+])
+  watch(%r[{{jsPath}}/.+])
+  watch(%r[{{cssPath}}/.+])
   watch(%r{app/config/packages/way/guard-laravel/guard.php}) do |m|
     `php artisan guard:refresh`
   end
-  watch('public/css/styles.min.css') do |m|
+  watch('{{cssPath}}/styles.min.css') do |m|
     css = File.read(m[0])
     File.open(m[0], 'w') { |file| file.write(CSSMin.minify(css)) }
   end
-  watch('public/js/scripts.min.js') do |m|
+  watch({{jsPath}}/scripts.min.js') do |m|
     js = File.read(m[0])
     File.open(m[0], 'w') { |file| file.write(JSMin.minify(js)) }
   end
