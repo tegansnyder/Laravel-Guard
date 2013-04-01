@@ -8,6 +8,7 @@ This plugin improves asset management in Laravel, by:
 - Compiling CoffeeScript
 - Automatically running tests on save
 - Concatenating and minifying JavaScript and CSS (if not using a preprocessor)
+- Instant browser refreshing
 
 ## Installation
 
