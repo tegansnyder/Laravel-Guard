@@ -19,7 +19,7 @@ if ( ! function_exists('stylesheet'))
 	}
 }
 
-if ( ! function_exists('stylesheet'))
+if ( ! function_exists('script'))
 	/**
 	 * Generates the necessary HTML for a
 	 * script link. Path should be relative
