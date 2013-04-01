@@ -12,7 +12,7 @@ class Gem {
 	{
 		if (! $this->exists($gemName))
 		{
-			$this->install('guard');
+			$this->install($gemName);
 		}
 	}
 
