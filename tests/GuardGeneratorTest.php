@@ -1,9 +1,15 @@
-<?php
+<?php namespace Way\Console;
 
 use Way\Console\GuardGenerator;
-use Mockery as m;
+use \Mockery as m;
 
-class GuardGeneratorTest extends PHPUnit_Framework_TestCase {
+// Mock app_path
+function app_path()
+{
+	return 'app';
+}
+
+class GuardGeneratorTest extends \PHPUnit_Framework_TestCase {
 	public function setUp()
 	{
 		$this->file = m::mock('Illuminate\Filesystem\Filesystem');
@@ -14,7 +20,7 @@ class GuardGeneratorTest extends PHPUnit_Framework_TestCase {
 
 	public function tearDown()
 	{
-		Mockery::close();
+		m::close();
 	}
 
 	public function testCanCreateFolder()
@@ -48,5 +54,15 @@ class GuardGeneratorTest extends PHPUnit_Framework_TestCase {
 		$this->file->shouldReceive('put')->with('some/path/plugins.txt', json_encode($plugins))->once();
 
 		$this->generate->log($plugins, 'some/path');
+	}
+
+	public function testLogPathWillDefaultToToStorageDir()
+	{
+		$plugins = ['foo'];
+
+		$this->file->shouldReceive('put')->with('app/storage/guard/plugins.txt', json_encode($plugins));
+		$this->file->shouldReceive('exists')->andReturn(true);
+		$this->generate->log($plugins);
+
 	}
 }
