@@ -82,6 +82,16 @@ When you need to specify the order, do so in `app/config/packages/way/guard-lara
 js_concat => ['module1', 'module2', 'module3']
 ```
 
+## LiveReloading
+
+This package also includes support for live reloading the browser when you make changes to stylesheets, JavaScripts, or Blade files.
+
+To make use of it, you only need to install the necessary LiveReload extension for your browser of choice. [See here for a list of options.](http://feedback.livereload.com/knowledgebase/articles/86242-how-do-i-install-and-use-the-browser-extensions-).
+
+> One important note is that, for Chrome, you need to visit *chrome://extensions/* and check "*Allow access to file URLs*."
+
+Once installed, run your server and click the LiveReload icon next to your address bar.
+
 ## Continuous Testing
 
 When you run `php artisan guard:watch`, in addition to compiling assets, it will also automatically run your tests when applicable files are saved.
