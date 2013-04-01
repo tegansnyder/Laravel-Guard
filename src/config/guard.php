@@ -58,7 +58,7 @@ return array(
 	| By default, we're going to concat all files from your CSS directory,
 	| but that's probably not what you want. When you need to set a specific order
 	| for concatenation, set this value to an array of paths that are relative
-	| to what you have set in the `js_path` option, above. So, for `public/css/buttons.css`,
+	| to what you have set in the `css_path` option, above. So, for `public/css/buttons.css`,
 	| you'd simply add `array('buttons')` (the extension may be left off).
 	|
 	*/

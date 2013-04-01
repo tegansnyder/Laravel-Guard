@@ -1,4 +1,6 @@
-# Easy Asset Management in Laravel (Beta)
+# Instant Compilation, Concatenation, and Minification in Laravel 4 (Beta)
+
+[Prefer a video overview?](https://dl.dropbox.com/u/774859/GitHub-Repos/laravel-guard-intro.mp4)
 
 This plugin improves asset management in Laravel, by:
 
