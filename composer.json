@@ -12,7 +12,7 @@
         "illuminate/support": "4.1.x",
         "illuminate/config": "4.1.x",
         "illuminate/console": "4.1.x",
-        "symfony/finder": "2.2.*"
+        "symfony/finder": "2.2.1"
     },
     "require-dev": {
         "mockery/mockery": "dev-master"
